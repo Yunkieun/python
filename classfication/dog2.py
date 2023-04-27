@@ -9,7 +9,7 @@ class Dog:
     def add_trick(self, trick):
         self.tricks.append(trick)
 
-# 객체(인스턴스, 오브젝트) 
+# 객체(인스턴스, 오브젝트)
 dog1 = Dog("기쁨")
 dog2 = Dog("사랑")
 
