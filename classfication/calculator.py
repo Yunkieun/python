@@ -1,14 +1,12 @@
 # Calculator 클래스
-
 class Calculator:
     def __init__(self):
-        self.x = 0 # 멤버변수 x에 0을 할당
+        self.x = 0  #멤버변수 x에 0을 할당
 
     # 매개변수 y값 더하기
     def add(self, y):
         self.x = self.x + y
         return self.x
-
     # 매개변수 z값 빼기
     def sub(self, z):
         self.x = self.x - z
