@@ -8,7 +8,6 @@ def click():
     output.insert(END, text) # text를 출력상자에 삽입
     # END - 문자열이 입력된 최종 지점까지 삭제후 삽입
 
-
 root = Tk()
 root.title("입력 및 출력")
 root.geometry("200x200")
@@ -24,6 +23,5 @@ btn.grid(row=1, columnspan=2)
 
 output = Text(root, width=20, height=5)
 output.grid(row=2, columnspan=2)
-
 
 root.mainloop()

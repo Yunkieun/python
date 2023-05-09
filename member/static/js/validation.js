@@ -6,9 +6,9 @@ function checkMember(){
     let pw2 = form.passwd2;
     let name = form.name;
 
-    let pw_pat1 = /[0-9]+/  // 숫자 표현식
-    let pw_pat2 = /[a-zA-Z]/  // 영어 대,소문자 표현식
-    let pw_pat3 = /[~!@#$%^&*()_+]+/  // 특수문자 표현식
+    let pw_pat1 = /[0-9]+/      // 숫자 표현식
+    let pw_pat2 = /[a-zA-Z]+/    // 영어 대.소문자 표현식
+    let pw_pat3 = /[~!@#$%^&*()_+]+/  //특수문자 표현식
 
     if(id.value.length < 4 || id.value.length > 15){
         alert("아이디는 4~15자까지 입력 가능합니다.");
@@ -24,12 +24,10 @@ function checkMember(){
         pw2.select();
         return false;
     }else if(name.value == ""){
-        alert("이름은 필수 입력 항목입니다.");
+        alert("이름은 필수 입력 항목입니다..");
         name.focus();
         return false;
     }else{
-        form.submit(); // 폼 전송 - db에 저장
+        form.submit();  //폼 전송 - db에 저장
     }
-
-
 }
