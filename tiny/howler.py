@@ -1,48 +1,42 @@
 import argparse
+import os
+import sys
+
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description="Jump the Five",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
+        description='Howler (upper-case input)',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
+    # 명령 인자 추가
     parser.add_argument('text',
-                        metavar='str',
-                        help='Input text')
+                        metavar='text',
+                        type=str,
+                        help='Input string or file')
 
-    return parser.parse_args()  #명령줄 인수를 처리해서 반환함
+    # 외부 파일 처리 인자 추가
+    parser.add_argument('-o',
+                        '--outfile',
+                        help='Output filename',
+                        metavar='str',
+                        type=str,
+                        default='')
+
+    args = parser.parse_args()
+
+    if os.path.isfile(args.text):
+        args.text = open(args.text).read().rstrip()  # rstrip() - 오른쪽 공백 제거
+
+    return args
 
 def main():
     args = get_args()
-    # print(args.text)
-    jumper = {'1': '9', '2': '8', '3': '7', '4': '6',
-              '5': '0', '6': '4', '7': '3', '8': '2', '9': '1', '0': '5'}
-
-    """
-    # 방법 1
-    for char in args.text:
-        print(jumper.get(char, char), end='')        
-    """
-
-    """
-    # 방법 2 - 새로운 문자열로 만들기
-    new_text = ''
-    for char in args.text:
-        new_text += jumper.get(char, char)
-    print(new_text)
-    """
-
-    """
-    # 방법 3 - 리스트로 만들기
-    new_text = []
-    for char in args.text:
-        new_text.append(jumper.get(char, char))
-    print(''.join(new_text))  # 문자열.join()
-    """
-
-    # 방법 4 - 리스트 내포
-    print(''.join([jumper.get(char, char) for char in args.text]))
-
+    #print(args.text)
+    # 명령 인수가 -o 문자열이 있면 파일을 생성하고, 아니면 문자열 출력(stdout)
+    # sys 모듈 - stdout(모니터 콘솔에 출력), stdin(모니터 콘솔에서 입력)
+    out_fh = open(args.outfile, 'wt') if args.outfile else sys.stdout
+    out_fh.write(args.text.upper() + '\n')
+    out_fh.close()
 
 if __name__=="__main__":
     main()
