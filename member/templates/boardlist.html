@@ -10,7 +10,7 @@
     <div id="container">
         {% include 'header.html' %}
         <div id="main-pic">
-            <img src="{{ url_for('static', filename='images/header1.jpg') }}" id="pic">
+            <img src="{{ url_for('static', filename='images/header1.jpg') }}">
         </div>
         <section id="boardlist">
             <h2>게시판 목록</h2>
@@ -24,10 +24,13 @@
                     {% for board in boardlist %}
                     <tr>
                         <td>{{ board[0] }}</td>
-                        <td><a href="{{ url_for('detail', bno=board[0]) }}">{{ board[1] }}</a></td>
+                        <td>
+                            <a href="{{ url_for('detail', bno=board[0]) }}">
+                                {{ board[1] }}</a>
+                        </td>
                         <td>{{ board[3] }}</td>
-                        <td>{{ board[4] }}</td>
                         <td>{{ board[5] }}</td>
+                        <td>{{ board[6] }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

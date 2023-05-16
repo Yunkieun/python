@@ -4,6 +4,8 @@
 from flask import Flask, render_template, request, \
     redirect, url_for, session
 import sqlite3
+# import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -88,7 +90,7 @@ def login():
 # 로그 아웃
 @app.route('/logout', methods = ['GET'])
 def logout():
-    session.clear()  # 모든 세션 삭제
+    session.clear()  #모든 세션 삭제
     return redirect(url_for('index'))
 
 # 게시판 목록
@@ -99,7 +101,6 @@ def boardlist():
     sql = "SELECT * FROM board ORDER BY createdate DESC"
     cursor.execute(sql)
     boardlist = cursor.fetchall()
-    # print(boardlist)
     # for board in boardlist:
     #     print(board)
     conn.close()
@@ -109,32 +110,39 @@ def boardlist():
 @app.route('/writing', methods=['GET', 'POST'])
 def writing():
     if request.method == 'POST':
-        # 입력된 제목, 글 내용을 가져와서 DB에 저장
-        title = request.form['title']
-        content = request.form['content']
+        # 입력된 제목,글내용을 가져와서 DB에 저장
+        title = request.form['title'].replace("'", "''")
+        content = request.form['content'].replace("'", "''")
         # userid : session 이름을 가져옴
         memberid = session.get('userid')
 
         conn = getconn()
         cursor = conn.cursor()
-        sql = f"INSERT INTO board(title, content, memberid)" \
-              f" VALUES ('{title}', '{content}', '{memberid}')"
-        cursor.execute(sql)  # 검색 수행
-        conn.commit()  # 커밋 완료
+        sql = f"INSERT INTO board(title, content, memberid) " \
+              f"VALUES ('{title}', '{content}', '{memberid}')"
+        cursor.execute(sql)
+        conn.commit()
         conn.close()
-
         return redirect(url_for('boardlist'))
-    return render_template('writing.html')
+    else:
+        return render_template('writing.html')
 
 # 글 상세보기
 @app.route('/detail/<int:bno>', methods=['GET'])
-def detail(bno):
+def detail(bno):  #매개변수로 bno 설정
     # DB의 board 테이블에서 bno로 검색된 글 가져오기
     conn = getconn()
     cursor = conn.cursor()
     sql = f"SELECT * FROM board WHERE bno = {bno}"
     cursor.execute(sql)
     board = cursor.fetchone()  # 게시글 1개 가져옴
+
+    # 조회수 증가
+    hit = board[5]
+    sql = f"UPDATE board SET hit = {hit + 1} WHERE bno = {bno}"
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
     return render_template('detail.html', board=board)
 
 # 게시글 삭제
@@ -143,11 +151,39 @@ def delete(bno):
     # 삭제 요청한 글 번호를 DB board 테이블 삭제
     conn = getconn()
     cursor = conn.cursor()
-    sql = f"DELETE FROM board WHERE bno = {bno}"  # 숫자이므로 따옴표 붙이지 않음
+    sql = f"DELETE FROM board WHERE bno = {bno}"  #숫자이므로 따옴표 붙이지 않음
     cursor.execute(sql)
     conn.commit()
     conn.close()
     return redirect(url_for('boardlist'))
 
+# 게시글 수정
+@app.route('/update/<int:bno>', methods=['GET', 'POST'])
+def update(bno):
+    if request.method == "POST":
+        # 수정한 입력 내용을 board 테이블에 저장
+        title = request.form['title'].replace("'","''")
+        content = request.form['content'].replace("'","''")
+        now = datetime.today()  # 수정한 현재 날짜와 시간
+        modifydate = now.strftime("%Y-%m-%d. %H:%M:%S")
+
+        # DB에 저장
+        conn = getconn()
+        cursor = conn.cursor()
+        sql = f"UPDATE board SET title = '{title}', content = '{content}', " \
+              f"modifydate = '{modifydate}' WHERE bno = {bno}"
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
+        return redirect(url_for('detail', bno=bno)) #상세보기(글번호 명시)
+    else:
+        # 수정할 글(board)을 db에 가져오기
+        conn = getconn()
+        cursor = conn.cursor()
+        sql = f"SELECT * FROM board WHERE bno = {bno}"
+        cursor.execute(sql)
+        board = cursor.fetchone()  #게시글 1개 반환받음
+        conn.close()
+        return render_template('update.html', board=board)
 
 app.run()

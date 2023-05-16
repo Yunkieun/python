@@ -17,6 +17,6 @@ for i in range(6):
     if num not in lotto: # 중복 제거(5개만 저장되는 문제)
         lotto.append(num)
 """
-ㅕㅕ
+
 # 출력
 print(lotto)
