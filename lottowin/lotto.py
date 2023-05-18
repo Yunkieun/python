@@ -6,13 +6,12 @@ from tkinter import *
 def lotto_win():
     # num = 1066
     num = entry.get()  # 입력박스에 입력된 값
-    url = "https://dhlottery.co.kr/gameResult.do?method=byWin&drwNo={}".format(num)
+    url = "https://www.dhlottery.co.kr/gameResult.do?method=byWin&drwNo={}".format(num)
     response = requests.get(url)
     # print(response.text)
 
     soup = BeautifulSoup(response.text, "html.parser")
     win_result = soup.select_one('div.win_result')  # 태그이름.클래스이름
-    print(win_result.text)
     # win_result.text #'\n'을 확인함
     win_list = win_result.text.split('\n')
     print(win_list)
@@ -21,17 +20,15 @@ def lotto_win():
     bonus_num = win_result.text.split('\n')[-4]
     print(bonus_num)
 
-
-# 출력상자에 번호 출력
-    output.delete(0.0, END)  # 첫행 첫문자위치에서 시작
+    # 출력상자에 번호 출력
+    output.delete(0.0, END)  # 첫행, 첫문자 위치에서 시작
     output.insert(END, f'당첨번호: {win_list}\n\n보너스: {bonus_num}')
-
-"""
+    '''
     print('당첨번호')
     print(win_list)
     print('보너스번호')
     print(bonus_num)
-"""
+    '''
 
 # lotto_win()
 window = Tk()
