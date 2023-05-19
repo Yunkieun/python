@@ -18,18 +18,19 @@ def search_list2(a, x):
 
     # 리스트에 찾는 값이 없으면
     if len(same_num) == 0:
+        # return -1
         return "값을 찾을 수 없습니다."
     else:
         return same_num
 
-
-
+def search_list3():
+    pass
 
 v = [60, 5, 33, 12, 97, 24, 5]
 
 # 매개변수 - 리스트, 찾는값
-print(search_list(v, 5))  # 1
-print(search_list(v, 12))  # 3
-print(search_list(v, 100))  # 3
+# print(search_list(v, 5))  # 1
+# print(search_list(v, 12))  # 3
+# print(search_list(v, 100))  # 3
 
 
